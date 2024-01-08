@@ -142,15 +142,14 @@ const TypingComp = () => {
                         }
 
                         return (
-                            <span  className={`word ${highlight && "green"} ${currentWord && "underline"}`} key={w_idx}>
+                            <span className={`word ${highlight && "green"} ${currentWord && "underline"}`} key={w_idx}>
                                 {word.split("").map((letter, l_idx) => {
                                     const isCurrentWord = w_idx === completedWords.length;
                                     const isWronglyTyped = letter !== inputValue[l_idx];
                                     const shouldBeHighlighted = l_idx < inputValue.length;
 
                                     return (
-                                        <span className={`letter ${isCurrentWord && shouldBeHighlighted ? isWronglyTyped ? "red" : "green": ""}`} 
-                                            key={l_idx}>
+                                        <span className={`letter ${isCurrentWord && shouldBeHighlighted ? isWronglyTyped ? "red" : "green": ""}`} key={l_idx}>
                                             {letter}
                                         </span>
                                     );

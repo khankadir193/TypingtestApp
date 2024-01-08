@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import content from './content.json'
-import keyPressSound  from '../Audio/keyboard-click.mp3'
+import keyPressSound from '../Audio/keyboard-click.mp3'
 
 const TypingComp = () => {
     //this hooks while  click on start button for starting the typing test...
@@ -63,6 +63,15 @@ const TypingComp = () => {
                 setWords(newWords);
                 setCompletedWords(newCompletedWords);
                 setInputValue('');
+            } else if (inputValue.trim().length > 0) {
+                const newWords = [...words.slice(1)];
+                const newCompletedWords = [...completedWords, currentWord];
+                const progress = (newCompletedWords.length / (newWords.length + newCompletedWords.length)) * 100;
+
+                setProgress(progress);
+                setWords(newWords);
+                setCompletedWords(newCompletedWords);
+                setInputValue('');
             }
         } else {
             setInputValue(inputValue);
@@ -85,7 +94,7 @@ const TypingComp = () => {
         // every word is considered to have 5 letters
         // so here we are getting all the letters in the words and divide them by 5
         // "my" shouldn't be counted as same as "deinstitutionalization"
-        console.log('completedWords...???',typeof completedWords);
+        console.log('completedWords...???', typeof completedWords);
         const wordsTyped = Math.ceil(completedWords.reduce((acc, word) => (acc += word.length), 0) / 5);
         console.log(completedWords, "completedWords");
         console.log(wordsTyped, "wordsTyped");
@@ -99,11 +108,11 @@ const TypingComp = () => {
 
     const handleKeyDown = (event) => {
 
-        console.log('event.key...??',event.key);
+        console.log('event.key...??', event.key);
         // Check if a key is pressed
         if (event.key !== 'Meta' && event.key !== 'Control' && event.key !== 'Alt' && event.key !== 'ContextMenu' && event.key !== 'Shift') {
             const audio = new Audio(keyPressSound);
-            audio.play();
+            // audio.play();
         }
     };
 
@@ -117,7 +126,7 @@ const TypingComp = () => {
             <div className="container">
                 <h4>Start the typing test</h4>
                 <progress value={progress} max="100" />
-                
+
                 <p className="text">
                     {text?.split(" ")?.map((word, w_idx) => {
                         let highlight = false;
@@ -133,27 +142,15 @@ const TypingComp = () => {
                         }
 
                         return (
-                            <span
-                                className={`word 
-                                ${highlight && "green"} 
-                                ${currentWord && "underline"}`}
-                                key={w_idx}
-                            >
+                            <span  className={`word ${highlight && "green"} ${currentWord && "underline"}`} key={w_idx}>
                                 {word.split("").map((letter, l_idx) => {
                                     const isCurrentWord = w_idx === completedWords.length;
                                     const isWronglyTyped = letter !== inputValue[l_idx];
                                     const shouldBeHighlighted = l_idx < inputValue.length;
 
                                     return (
-                                        <span
-                                            className={`letter ${isCurrentWord && shouldBeHighlighted
-                                                ? isWronglyTyped
-                                                    ? "red"
-                                                    : "green"
-                                                : ""
-                                                }`}
-                                            key={l_idx}
-                                        >
+                                        <span className={`letter ${isCurrentWord && shouldBeHighlighted ? isWronglyTyped ? "red" : "green": ""}`} 
+                                            key={l_idx}>
                                             {letter}
                                         </span>
                                     );
